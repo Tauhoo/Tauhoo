@@ -3,6 +3,7 @@ from src.image_reader import image_reader
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
+from os import path
 
 
 """ initialize config file """
@@ -20,13 +21,14 @@ generator = reader.get_generator()
 pokemon_list = reader.pokemon_list
 pokemon_size = len(pokemon_list)
 
+
 """ create model """
 model = keras.Sequential()
-model.add(keras.layers.Conv2D(32, (3, 3), activation='relu',
+model.add(keras.layers.Conv2D(20, (10, 10), activation='relu',
                               input_shape=(image_size, image_size, 3)))
-model.add(keras.layers.MaxPooling2D((2, 2), data_format='channels_last'))
+model.add(keras.layers.MaxPooling2D((2, 2)))
 model.add(keras.layers.Flatten())
-model.add(keras.layers.Dense(pokemon_size, activation=tf.nn.softmax))
+model.add(keras.layers.Dense(pokemon_size))
 model.compile(
     optimizer='adam',
     loss=keras.losses.SparseCategoricalCrossentropy(
@@ -34,12 +36,17 @@ model.compile(
     metrics=['accuracy'])
 model.summary()
 
+""" load weights """
+if path.exists(weight_file_path):
+    print("already have weight {}".format(weight_file_path))
+    model.load_weights(weight_file_path)
+
 """ train """
 history = model.fit_generator(
     generator, epochs=epochs, steps_per_epoch=steps_per_epoch)
 
 """ save weight """
-model.save(weight_file_path)
+model.save_weights(weight_file_path)
 
 """ graph """
 plt.plot(history.history['accuracy'], label='accuracy')
