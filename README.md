@@ -16,21 +16,21 @@ And you need to put your data that you want to train.
 
 ```bash
 .
-|--files
-|  |--data
-|     |--pokemon-name1 #pokemon name
-|     |  |--pic1.png # pokemon's picture that will be trained.
-|     |  |--pic2.png
-|     |  |--...
-|     |--pokemon-name2
-|     |  |--pic1.png
-|     |  |--pic2.png
-|     |  |--...
-|     |--...
-|--src
-|--config.ini # config training
-|--test.py
-|--train.py
+├── files
+|   └── data
+|     ├── pokemon-name1 #pokemon name
+|     |   ├── pic1.png # pokemon's picture that will be trained.
+|     |   ├── pic2.png
+|     |   └── ...
+|     ├── pokemon-name2
+|     |   ├── pic1.png
+|     |   ├── pic2.png
+|     |   └──...
+|     └── ...
+├── src
+├── config.ini # config training
+├── test.py
+└── train.py
 ```
 
 ## Config
