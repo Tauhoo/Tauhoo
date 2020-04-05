@@ -35,7 +35,8 @@ class image_reader:
                 image = tf.image.decode_image(image, channels=1)
                 image = tf.image.resize(
                     image, [self.image_size, self.image_size])
-                yield image/255, label, [None]
+                image /= 255
+                yield (image, label)
             except:
                 print(path)
 

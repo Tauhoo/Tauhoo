@@ -1,5 +1,6 @@
 from src.configure import configure
 from src.image_reader import image_reader
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
 
@@ -19,7 +20,13 @@ pokemon_size = len(pokemon_list)
 
 """ create model """
 model = keras.Sequential()
-model.add(keras.layers.Flatten(input_shape=(image_size, image_size)))
+model.add(keras.layers.Conv2D(32, (3, 3), activation='relu',
+                              input_shape=(image_size, image_size, 1)))
+model.add(keras.layers.MaxPooling2D((2, 2), data_format='channels_last'))
+model.add(keras.layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(keras.layers.MaxPooling2D((2, 2), data_format='channels_last'))
+model.add(keras.layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(keras.layers.Flatten())
 model.add(keras.layers.Dense(pokemon_size, activation=tf.nn.softmax))
 model.compile(
     optimizer='adam',
@@ -29,7 +36,16 @@ model.compile(
 model.summary()
 
 """ train """
-model.fit(generator, epochs=100, steps_per_epoch=60)
+history = model.fit_generator(generator, epochs=10, steps_per_epoch=60)
 
 """ save weight """
 model.save(weight_file_path)
+
+# """ graph """
+# print(history.__dict__)
+# plt.plot(history.history['accuracy'], label='accuracy')
+# plt.plot(history.history['loss'], label='loss')
+# plt.xlabel('Epoch')
+# plt.ylabel('Accuracy')
+# plt.legend(loc='lower right')
+# plt.show()
