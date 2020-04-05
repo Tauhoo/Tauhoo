@@ -36,7 +36,8 @@ class image_reader:
                 image = tf.image.resize(
                     image, [self.image_size, self.image_size])
                 image /= 255
-                yield (image, label)
+                x = tf.expand_dims(image, 0)
+                yield (x, label)
             except:
                 print(path)
 
