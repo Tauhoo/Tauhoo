@@ -3,6 +3,7 @@ import random
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 
 class image_reader:
@@ -30,13 +31,22 @@ class image_reader:
         return self
 
     def pop_data(self):
-        print(self.data_list[self.count])
         label, path = self.data_list[self.count]
         image = tf.io.read_file(path)
-        image = tf.image.decode_jpeg(image, channels=1)
+        image = tf.image.decode_image(image, channels=1)
         image = tf.image.resize(image, [self.image_size, self.image_size])
         self.count += 1
-        return (label, image)
+        if self.count >= len(self.data_list):
+            self.count = 0
+        return (image/255, label)
+
+    def get_generator(self):
+        for index in range(len(self.data_list)):
+            try:
+                yield self.pop_data()
+            except:
+                print("[{}]".format(sys.exc_info()[0]))
+                pass
 
     def show_image(self, image):
         image = np.array(image).reshape((self.image_size, self.image_size))
