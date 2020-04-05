@@ -29,7 +29,7 @@ model.compile(
 model.summary()
 
 """ train """
-model.fit(generator, epochs=6, steps_per_epoch=100)
+model.fit(generator, epochs=100, steps_per_epoch=60)
 
 """ save weight """
 model.save(weight_file_path)

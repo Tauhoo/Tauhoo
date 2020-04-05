@@ -8,7 +8,6 @@ import sys
 
 class image_reader:
     data_list = []
-    count = 0
 
     def __init__(self, path, image_size):
         self.root_path = path
@@ -27,26 +26,18 @@ class image_reader:
 
     def shuffle(self):
         random.shuffle(self.data_list)
-        self.count = 0
         return self
 
-    def pop_data(self):
-        label, path = self.data_list[self.count]
-        image = tf.io.read_file(path)
-        image = tf.image.decode_image(image, channels=1)
-        image = tf.image.resize(image, [self.image_size, self.image_size])
-        self.count += 1
-        if self.count >= len(self.data_list):
-            self.count = 0
-        return (image/255, label)
-
     def get_generator(self):
-        for index in range(len(self.data_list)):
+        for label, path in self.data_list:
             try:
-                yield self.pop_data()
+                image = tf.io.read_file(path)
+                image = tf.image.decode_image(image, channels=1)
+                image = tf.image.resize(
+                    image, [self.image_size, self.image_size])
+                yield image/255, label, [None]
             except:
-                print("[{}]".format(sys.exc_info()[0]))
-                pass
+                print(path)
 
     def show_image(self, image):
         image = np.array(image).reshape((self.image_size, self.image_size))
