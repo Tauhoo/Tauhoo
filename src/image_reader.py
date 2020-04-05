@@ -29,17 +29,18 @@ class image_reader:
         return self
 
     def get_generator(self):
-        for label, path in self.data_list:
-            try:
-                image = tf.io.read_file(path)
-                image = tf.image.decode_image(image, channels=1)
-                image = tf.image.resize(
-                    image, [self.image_size, self.image_size])
-                image /= 255
-                x = tf.expand_dims(image, 0)
-                yield (x, label)
-            except:
-                print(path)
+        while True:
+            for label, path in self.data_list:
+                try:
+                    image = tf.io.read_file(path)
+                    image = tf.image.decode_image(image, channels=3)
+                    image = tf.image.resize(
+                        image, [self.image_size, self.image_size])
+                    image /= 255
+                    x = tf.expand_dims(image, 0)
+                    yield (x, label)
+                except:
+                    print(path)
 
     def show_image(self, image):
         image = np.array(image).reshape((self.image_size, self.image_size))
