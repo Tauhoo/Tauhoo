@@ -14,7 +14,7 @@ pip install numpy
 
 And you need to put your data that you want to train.
 
-```
+```bash
 .
 |--files
 |  |--data
